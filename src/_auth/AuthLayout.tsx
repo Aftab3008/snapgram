@@ -1,8 +1,12 @@
+import Loader from "@/components/shared/Loader";
 import { useUserContext } from "@/context/AuthContext";
 import { Outlet, useNavigate } from "react-router-dom";
 export function AuthLayout() {
-  const { isAuthenticated } = useUserContext();
+  const { isAuthenticated, isLoading } = useUserContext();
   const navigate = useNavigate();
+  if (isLoading) {
+    return <Loader />;
+  }
   if (isAuthenticated) {
     navigate("/");
   }
