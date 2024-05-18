@@ -1,7 +1,6 @@
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useSignOutAccount } from "@/lib/react-query/queriesAndMutations";
-import { useEffect } from "react";
 import { INITIAL_USER, useUserContext } from "@/context/AuthContext";
 import { sidebarLinks } from "@/constants";
 import { INavLink } from "@/types";
