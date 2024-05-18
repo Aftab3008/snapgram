@@ -45,6 +45,7 @@ export default function SignUpForm() {
       toast({
         title: "Sign up failed. Please try again later",
       });
+      return;
     }
     const session = await signInAccount({
       email: values.email,
@@ -54,15 +55,18 @@ export default function SignUpForm() {
       toast({
         title: "Sign in failed. Please try again later",
       });
+      navigate("/sign-in");
+      return;
     }
     const isLoggedIn = await checkAuthUser();
     if (isLoggedIn) {
       form.reset();
       navigate("/");
     } else {
-      return toast({
+      toast({
         title: "Sign in failed. Please try again later",
       });
+      return;
     }
   }
   return (

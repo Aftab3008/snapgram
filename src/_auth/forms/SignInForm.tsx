@@ -21,9 +21,16 @@ import { useUserContext } from "@/context/AuthContext";
 
 export default function SignInForm() {
   const { toast } = useToast();
-  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
-  const { mutateAsync: signInAccount } = useSignInAccount();
+  const {
+    checkAuthUser,
+    isLoading: isUserLoading,
+    isAuthenticated,
+  } = useUserContext();
+  const { mutateAsync: signInAccount, isPending } = useSignInAccount();
   const navigate = useNavigate();
+  if (isAuthenticated) {
+    navigate("/");
+  }
   const form = useForm<z.infer<typeof SignInValidation>>({
     resolver: zodResolver(SignInValidation),
     defaultValues: {
@@ -41,15 +48,17 @@ export default function SignInForm() {
       toast({
         title: "Sign in failed. Please try again later",
       });
+      return;
     }
     const isLoggedIn = await checkAuthUser();
     if (isLoggedIn) {
       form.reset();
       navigate("/");
     } else {
-      return toast({
+      toast({
         title: "Sign in failed. Please try again later",
       });
+      return;
     }
   }
   return (
@@ -93,11 +102,11 @@ export default function SignInForm() {
             )}
           />
           <Button type="submit" className="shad-button_primary">
-            {!isUserLoading ? (
+            {!isUserLoading || !isPending ? (
               "Sign In"
             ) : (
               <div className="flex-center gap-2">
-                <Loader />
+                <Loader /> Loading...
               </div>
             )}
           </Button>
