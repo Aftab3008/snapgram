@@ -4,11 +4,17 @@ import { useSignOutAccount } from "@/lib/react-query/queriesAndMutations";
 import { INITIAL_USER, useUserContext } from "@/context/AuthContext";
 import { sidebarLinks } from "@/constants";
 import { INavLink } from "@/types";
+import Loader from "./Loader";
 
 export default function LeftSidebar() {
   const { pathname } = useLocation();
   const { mutate: signout } = useSignOutAccount();
-  const { user, setUser, setIsAuthenticated } = useUserContext();
+  const {
+    user,
+    setUser,
+    setIsAuthenticated,
+    isLoading: isUserLoading,
+  } = useUserContext();
   const navigate = useNavigate();
   const handleSignOut = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -31,17 +37,23 @@ export default function LeftSidebar() {
           />
         </Link>
 
-        <Link to={`/profile/${user.id}`} className="flex gap-3 items-center">
-          <img
-            src={user.imageUrl || "/assets/images/profile-placeholder.svg"}
-            alt="profile"
-            className="rounded-full h-14 w-14"
-          />
-          <div className="flex flex-col">
-            <p className="body-bold">{user.name}</p>
-            <p className="small-regular text-light-3">@{user.username}</p>
+        {isUserLoading || !user.email ? (
+          <div className="h-14">
+            <Loader />
           </div>
-        </Link>
+        ) : (
+          <Link to={`/profile/${user.id}`} className="flex gap-3 items-center">
+            <img
+              src={user.imageUrl || "/assets/images/profile-placeholder.svg"}
+              alt="profile"
+              className="rounded-full h-14 w-14"
+            />
+            <div className="flex flex-col">
+              <p className="body-bold">{user.name}</p>
+              <p className="small-regular text-light-3">@{user.username}</p>
+            </div>
+          </Link>
+        )}
 
         <ul className="flex flex-col gap-6">
           {sidebarLinks.map((link: INavLink) => {
