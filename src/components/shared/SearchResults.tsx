@@ -1,10 +1,11 @@
-import { Models } from "appwrite";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// import { Models } from "appwrite";
 import Loader from "./Loader";
 import GridPostList from "./GridPostList";
 
 type SearchResultsProps = {
   isSearchingFectching: boolean;
-  searchedPosts: Models.Document[];
+  searchedPosts: any;
 };
 
 export default function SearchResults({
