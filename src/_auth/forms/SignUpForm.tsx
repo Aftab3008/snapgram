@@ -42,7 +42,7 @@ export default function SignUpForm() {
   async function onSubmit(values: z.infer<typeof SignUpValidation>) {
     const newUser = await createUserAccount(values);
     if (!newUser) {
-      return toast({
+      toast({
         title: "Sign up failed. Please try again later",
       });
     }
@@ -51,7 +51,7 @@ export default function SignUpForm() {
       password: values.password,
     });
     if (!session) {
-      return toast({
+      toast({
         title: "Sign in failed. Please try again later",
       });
     }

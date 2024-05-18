@@ -14,6 +14,7 @@ export default function GridPostList({
   showStats = true,
 }: GridPostListProps) {
   const { user } = useUserContext();
+  // console.log("posts", posts);
   return (
     <ul className="grid-container">
       {posts.map((post) => (
@@ -30,11 +31,11 @@ export default function GridPostList({
             {showUser && (
               <div className="flex items-center justify-start gap-2 flex-1">
                 <img
-                  src={post.creator.imageUrl}
+                  src={post.creator?.imageUrl}
                   alt="creator"
                   className="rounded-full h-8 w-8"
                 />
-                <p className="line-clamp-1">{post.creator.name}</p>
+                <p className="line-clamp-1">{post.creator?.name}</p>
               </div>
             )}
             {showStats && <PostStats post={post} userId={user.id} />}
