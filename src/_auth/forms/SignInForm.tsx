@@ -102,12 +102,12 @@ export default function SignInForm() {
             )}
           />
           <Button type="submit" className="shad-button_primary">
-            {!isUserLoading || !isPending ? (
-              "Sign In"
-            ) : (
+            {isUserLoading || isPending ? (
               <div className="flex-center gap-2">
                 <Loader /> Loading...
               </div>
+            ) : (
+              "Sign In"
             )}
           </Button>
           <p className="text-small-regular text-light-2 text-center mt-2">

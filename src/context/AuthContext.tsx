@@ -1,9 +1,16 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 // import { set } from 'zod';
 import { IContextType, IUser } from "@/types";
 import { getCurrentUser } from "@/lib/appwrite/api";
 import { useNavigate } from "react-router-dom";
-import Loader from "@/components/shared/Loader";
+// import Loader from "@/components/shared/Loader";
 
 export const INITIAL_USER = {
   id: "",
@@ -30,25 +37,25 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   // console.log(user);
-  const checkAuthUser = async () => {
+  const checkAuthUser = useCallback(async () => {
     try {
       const currentAccount = await getCurrentUser();
       if (currentAccount) {
         setUser({
           id: currentAccount.$id,
           name: currentAccount.name,
+
           username: currentAccount.username,
           email: currentAccount.email,
           imageUrl: currentAccount.imageUrl,
           bio: currentAccount.bio,
         });
         setIsAuthenticated(true);
-        console.log(user);
         return true;
       } else {
         setIsAuthenticated(false);
         localStorage.setItem("cookieFallback", "[]");
-        navigate("/sign-up");
+        navigate("/sign-in");
       }
       return false;
     } catch (error) {
@@ -60,24 +67,35 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [navigate]);
 
   useEffect(() => {
     checkAuthUser();
   }, []);
 
-  if (isLoading) {
-    return <Loader />;
-  }
-  const value = {
-    user,
-    isAuthenticated,
-    isLoading,
-    setUser,
-    setIsAuthenticated,
-    setIsLoading,
-    checkAuthUser,
-  };
+  // if (isLoading) {
+  //   return <Loader />;
+  // }
+  const value = useMemo(
+    () => ({
+      user,
+      isAuthenticated,
+      isLoading,
+      setUser,
+      setIsAuthenticated,
+      setIsLoading,
+      checkAuthUser,
+    }),
+    [
+      user,
+      isAuthenticated,
+      isLoading,
+      setUser,
+      setIsAuthenticated,
+      setIsLoading,
+      checkAuthUser,
+    ]
+  );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
