@@ -5,16 +5,11 @@ import { Outlet, useNavigate } from "react-router-dom";
 export function AuthLayout() {
   const { isAuthenticated, isLoading } = useUserContext();
   const navigate = useNavigate();
-
   useEffect(() => {
-    if (!isLoading) {
-      if (isAuthenticated) {
-        navigate("/");
-      } else {
-        navigate("/sign-up");
-      }
+    if (isAuthenticated) {
+      navigate("/");
     }
-  }, [isAuthenticated, isLoading, navigate]);
+  }, [isAuthenticated, navigate]);
   if (isLoading) {
     return <Loader />;
   }
