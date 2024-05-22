@@ -3,10 +3,16 @@ import { Button } from "../ui/button";
 import { useSignOutAccount } from "@/lib/react-query/queriesAndMutations";
 import { useEffect } from "react";
 import { INITIAL_USER, useUserContext } from "@/context/AuthContext";
+import Loader from "./Loader";
 
 export default function Topbar() {
   const { mutate: signout, isSuccess } = useSignOutAccount();
-  const { user, setIsAuthenticated, setUser } = useUserContext();
+  const {
+    user,
+    setIsAuthenticated,
+    setUser,
+    isLoading: isUserLoading,
+  } = useUserContext();
   const navigate = useNavigate();
   useEffect(() => {
     if (isSuccess) {
@@ -42,13 +48,17 @@ export default function Topbar() {
           >
             <img src="/assets/icons/logout.svg" alt="logout" />
           </Button>
-          <Link to={`/profile/${user.id}`} className="flex-center gap-3">
-            <img
-              src={user.imageUrl || "/assets/images/profile-placeholder.svg"}
-              alt="profile"
-              className="rounded-full h-8 w-8"
-            />
-          </Link>
+          {isUserLoading || !user.email ? (
+            <Loader />
+          ) : (
+            <Link to={`/profile/${user.id}`} className="flex-center gap-3">
+              <img
+                src={user.imageUrl || "/assets/images/profile-placeholder.svg"}
+                alt="profile"
+                className="rounded-full h-8 w-8"
+              />
+            </Link>
+          )}
         </div>
       </div>
     </section>
